@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	Application context definition for PetClinic on JDBC.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:task="http://www.springframework.org/schema/task"
+		xsi:schemaLocation="
+			http://www.springframework.org/schema/task
+			http://www.springframework.org/schema/task/spring-task-3.1.xsd
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+			http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+
+    <task:executor id="executor" pool-size="5" />  
+    <task:scheduler id="scheduler" pool-size="10" /> 
+	<context:component-scan base-package="org.langke" />   
+    <task:annotation-driven />
+    
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    	<property name="driverClassName" value="org.h2.Driver" />
+    	<!-- 嵌入式 -->
+		<property name="url" value="jdbc:h2:h2/app_monitor;MODE=MySQL;IGNORECASE=TRUE" />
+		<!-- 独立服务
+		<property name="url" value="jdbc:h2:tcp://localhost/~/app_monitor;MODE=MySQL;IGNORECASE=TRUE" /> -->
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+		<property name="initialSize" value="2" />
+		<property name="maxActive" value="30" />
+		<property name="validationQuery" value="select 1"/>
+    </bean>
+    
+	<bean id="logFilter" class="org.langke.jetty.servlet.LogFilter" />
+	<bean id="monitorFilter" class="net.bull.javamelody.MonitoringFilter"></bean>
+	<bean id="sessionListener" class="net.bull.javamelody.SessionListener"></bean>
+
+	<bean id="jettyEmbedServer" class="org.langke.jetty.server.AppMonitorJettyServer">
+		<property name="port" value="9009" />
+		<property name="threadNum" value="50" />
+		<property name="contextPath" value="/" />
+		<property name="webPath" value="./src/main/webapp" />
+
+		<!-- filters -->
+		<property name="filters">
+			<map>
+				<entry key="/*" value-ref="logFilter"/>
+				<entry key="/monitoring" value-ref="monitorFilter"></entry>
+			</map>
+		</property>
+
+		<!-- servlets -->
+		<property name="servlets">
+			<map>
+			</map>
+		</property>
+		<!-- listeners -->
+		<property name="listeners">
+			<list>
+				<ref bean="sessionListener"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- controller --> 
+	
+	<!-- dao -->
+	<bean id="appMonitorDao" class="org.langke.jetty.dao.impl.AppMonitorDao">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+</beans>
