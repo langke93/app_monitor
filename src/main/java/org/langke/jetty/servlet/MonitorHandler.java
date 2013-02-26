@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.langke.jetty.common.CostTime;
 import org.langke.jetty.common.DateUtil;
@@ -26,6 +27,8 @@ import org.langke.jetty.server.SpringApplicationContext;
 import org.langke.jetty.service.AppMonitorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -34,14 +37,15 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 /**
  * Servlet implementation class MonitorHandler
  */
-
+//@Controller
 public class MonitorHandler extends HttpServlet {
 	Statement st = null;
 	private static final long serialVersionUID = 1L;
 	private static final Logger log = LoggerFactory.getLogger(MonitorHandler.class);
 
+	//@Autowired
 	AppMonitorService appMonitorService = (AppMonitorService) SpringApplicationContext.getInstance().getService("appMonitorService");
-	 
+
 	String DBType;
 
 	/**
@@ -79,7 +83,6 @@ public class MonitorHandler extends HttpServlet {
 		Object result = null;
 		if(method.equalsIgnoreCase("/favicon.ico"))
 			return;
-		//log.debug("request:{}",request);
 		if(method.equalsIgnoreCase("/_report"))
 			report(request, response);
 		else if(method.equalsIgnoreCase("/_add"))
@@ -94,7 +97,10 @@ public class MonitorHandler extends HttpServlet {
 	
 	private Object _add(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	    String body = RequestUtil.getRequestString(request);
+		log.debug("body:{}",body);
 	    JSONArray jsoarr = JSONObject.parseArray(body);
+	    if(jsoarr==null)
+	    	return null;
 	    return appMonitorService.insert(jsoarr);
 	}
 	private void report(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -109,9 +115,10 @@ public class MonitorHandler extends HttpServlet {
 		String auto_refresh = request.getParameter("auto_refresh");
 		String server_ip = request.getParameter("server_ip");
 		String series = request.getParameter("series");
-		String table_name = TableUtil.table_name;
+		String size = request.getParameter("size");
+		String table_name = TableUtil.getT_API_MONITOR_YYYYMMDD();
 		if(StringUtils.isNotEmpty(startDay)){
-			table_name = TableUtil.table_name_pre+DateUtil.format(DateUtil.parseStringToDateTime(startDay),"yyyy_MM_dd");
+			table_name = TableUtil.T_API_MONITOR_PRE+DateUtil.format(DateUtil.parseStringToDateTime(startDay),"yyyy_MM_dd");
 		}else{
 			Date date = new Date();
 			startDay = DateUtil.getDatetimeStr(DateUtils.addHours(date, -1).getTime());
@@ -130,8 +137,18 @@ public class MonitorHandler extends HttpServlet {
 		Map<String,Object> map2 = null;   	
 		String analysisfilename = "";
 	   	String analysisgraphURL = "";
-		int width=660;
-	  	int height=380;
+		int width=558;
+	  	int height=323;
+	  	if(size==null)
+	  		size = "1";
+	  	switch(NumberUtils.createInteger(size)){
+	  		case 0:width=558;height=323;
+	  		break;
+	  		case 1:width=660;height=380;
+	  		break;
+	  		case 2:width=990;height=570;
+	  		break;
+	  	}
 		String where="";
 		if(StringUtils.isNotEmpty(startDay) && StringUtils.isNotEmpty(endDay))
 			where += " and add_time between '"+startDay+"' and '"+endDay+"' ";
@@ -142,7 +159,7 @@ public class MonitorHandler extends HttpServlet {
 		if(StringUtils.isNotEmpty(series)){
 			where += " and app_name = '"+series+"' ";
 		}
-		List<Map<String,Object>> ipList = Dbop.getQueryList("select server_ip from "+table_name+" where 1=1 "+where+" group by server_ip");
+		List<Map<String,Object>> ipList = Dbop.getQueryList("select server_ip from "+table_name+" where 1=1 "+where+" group by server_ip order by server_ip");
 		if(StringUtils.isNotEmpty(server_ip))
 			where += " and server_ip = '"+server_ip+"' ";
 		String htmlstr = "";
@@ -161,14 +178,18 @@ public class MonitorHandler extends HttpServlet {
 		  	htmlstr+="		<option value=\""+ipMap.get("SERVER_IP")+"\" "+(ipMap.get("SERVER_IP").equals(StringUtils.trimToNull(server_ip))?"selected":"")+">"+ipMap.get("SERVER_IP")+"</option>";
 	  	}
 	  	htmlstr+="		</select>\n";
-	  	htmlstr+="		from<input name=\"startDay\" id=\"startDay\" type=\"text\" value=\""+StringUtils.trimToEmpty(startDay)+"\" class=\"Wdate\" onclick=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})\"/>&nbsp;To&nbsp;\n";
+	  	htmlstr+="		from<input name=\"startDay\" id=\"startDay\" type=\"text\" value=\""+StringUtils.trimToEmpty(request.getParameter("startDay"))+"\" class=\"Wdate\" onclick=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})\"/>&nbsp;To&nbsp;\n";
 	  	htmlstr+="			<input name=\"endDay\" id=\"endDay\" type=\"text\" value=\""+StringUtils.trimToEmpty(endDay)+"\" class=\"Wdate\" onclick=\"WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})\"/>\n";
 	  	htmlstr+=" auto load 1/min<input type=\"checkbox\" name=auto_refresh id=auto_refresh value=1 "+(auto_refresh!=null?"checked":"")+">";
+	  	htmlstr+="	 <select name=\"size\" onchange=\"document.form.submit();\">\n";
+	  	htmlstr+="		<option value=0 "+(size.equals("0")?"selected":"")+">small</option>\n";
+	  	htmlstr+="		<option value=1 "+(size.equals("1")?"selected":"")+">medium</option>\n";
+	  	htmlstr+="		<option value=2 "+(size.equals("2")?"selected":"")+">large</option>\n		</select>\n";
 	  	htmlstr+="			<input type=button value=query onclick=\"document.form.submit();\">";
 	  	htmlstr+="</form>";
 	  	out.println(htmlstr);
 		out.println("<table>");
-		barSQL = "select type,status from "+table_name+" where 1=1 "+where+" group by status order by status desc";
+		barSQL = "select type,status from "+table_name+" where 1=1 "+where+" group by status order by type,status desc";
 		String mapUrl = null;
 		cost.start();
 		list = Dbop.getQueryList(barSQL);
@@ -181,9 +202,9 @@ public class MonitorHandler extends HttpServlet {
 			out.println("<tr><td>");
 			//thread count
 			if(DBType.equalsIgnoreCase("H2")){
-				barSQL = "select app_name,PARSEDATETIME(FORMATDATETIME(add_time,'yyyy-MM-d H:m'),'yyyy-MM-d H:m') add_time,sum(val) from "+table_name+" where 1=1 and status='"+map.get("STATUS")+"'  "+where+" group by FORMATDATETIME(add_time,'yyyy-MM-d H:m'),add_time,app_name";//h2搞什么？函数不统一
+				barSQL = "select app_name,PARSEDATETIME( add_time,'yyyy-MM-d H:m') add_time,val from(select app_name,FORMATDATETIME(add_time,'yyyy-MM-d H:m') add_time,sum(val) val from "+table_name+" where 1=1 and status='"+map.get("STATUS")+"'  "+where+" group by FORMATDATETIME(add_time,'yyyy-MM-d H:m'),app_name) a";//h2搞什么？函数不统一
 			}else{
-				barSQL = "select app_name,str_to_date(date_format(add_time,'%Y-%m-%d %H:%i'),'%Y-%m-%d %H:%i'),sum(val) from "+table_name+" where 1=1 and status='"+map.get("STATUS")+"'  "+where+" group by date_format(add_time,'%Y-%m-%d %H:%i'),app_name";
+				barSQL = "select app_name,str_to_date(add_time,'%Y-%m-%d %H:%i') add_time, val from(select app_name,date_format(add_time,'%Y-%m-%d %H:%i') add_time,sum(val) val from "+table_name+" where 1=1 and status='"+map.get("STATUS")+"'  "+where+" group by date_format(add_time,'%Y-%m-%d %H:%i'),app_name) a";
 			}
 				
 			try { 
@@ -205,9 +226,9 @@ public class MonitorHandler extends HttpServlet {
 			out.println("	<td>");
 			
 			if(DBType.equalsIgnoreCase("H2")){
-				barSQL = "select app_name,PARSEDATETIME(FORMATDATETIME(add_time,'yyyy-MM-d H:m') ,'yyyy-MM-d H:m') add_time,sum(val) from "+table_name+" where 1=1 and status='"+map2.get("STATUS")+"'  "+where+" group by FORMATDATETIME(add_time,'yyyy-MM-d H:m'),app_name";//h2写法
+				barSQL = "select app_name,PARSEDATETIME( add_time,'yyyy-MM-d H:m') add_time,val from(select app_name,FORMATDATETIME(add_time,'yyyy-MM-d H:m') add_time,sum(val) val from "+table_name+" where 1=1 and status='"+map2.get("STATUS")+"'  "+where+" group by FORMATDATETIME(add_time,'yyyy-MM-d H:m'),app_name) a";//h2写法
 			}else{
-				barSQL = "select app_name,str_to_date(date_format(add_time,'%Y-%m-%d %H:%i'),'%Y-%m-%d %H:%i'),sum(val) from "+table_name+" where 1=1 and status='"+map2.get("status")+"'  "+where+" group by date_format(add_time,'%Y-%m-%d %H:%i'),app_name";
+				barSQL = "select app_name,str_to_date(add_time,'%Y-%m-%d %H:%i') add_time, val from(select app_name,date_format(add_time,'%Y-%m-%d %H:%i') add_time,sum(val) val from "+table_name+" where 1=1 and status='"+map2.get("status")+"'  "+where+" group by date_format(add_time,'%Y-%m-%d %H:%i'),app_name) a";
 			}
 			try { 
 		   		cost.start();

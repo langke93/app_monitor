@@ -6,13 +6,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.sql.DataSource;
+
 import org.apache.commons.lang3.time.DateUtils;
 import org.langke.jetty.common.DateUtil;
 import org.langke.jetty.common.TableUtil;
 import org.langke.jetty.dao.IAppMonitorDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -23,22 +27,47 @@ import com.alibaba.fastjson.JSONObject;
  * 2013.1.12
  *
  */
+@Repository("appMonitorDao")
 public class AppMonitorDao extends JdbcDaoSupport implements IAppMonitorDao{
 
 	private static final Logger log = LoggerFactory.getLogger(AppMonitorDao.class);
+	DataSource ds;
+	@Autowired
+	public void setDs(DataSource ds) {
+		super.setDataSource(ds);
+		this.ds = ds;
+	}
 
 	@Override
 	public void create() {
-		String batchSQL[] = generateCreateTableSql(TableUtil.table_name);
+		String batchSQL[] = generateCreateTableSql(TableUtil.getT_API_MONITOR_YYYYMMDD());
 		this.getJdbcTemplate().batchUpdate(batchSQL);//创建当天的表
 		
 		Date tomorrow = DateUtils.addDays(Calendar.getInstance().getTime(), 1);
-		batchSQL = generateCreateTableSql(TableUtil.table_name_pre+DateUtil.format(tomorrow, "yyyy_MM_dd"));
+		batchSQL = generateCreateTableSql(TableUtil.T_API_MONITOR_PRE+DateUtil.format(tomorrow, "yyyy_MM_dd"));
 		this.getJdbcTemplate().batchUpdate(batchSQL);//创建次日的表
 
 		String sql = "select table_name from information_schema.`TABLES` where  TABLE_NAME like 'T_API_MONITOR_%'";
 		List<Map<String,Object>> list = this.getJdbcTemplate().queryForList(sql);
 		log.info("tables :{}",list);
+	}
+
+	private String[] generateCreateTableSql(String table_name){
+		String batchSQL[] = { "CREATE TABLE IF NOT EXISTS `"+table_name+"` ( "+
+				  "`group_name` varchar(40) DEFAULT NULL, "+
+				  "`server_ip` varchar(40) DEFAULT NULL, "+
+				  "`app_name` varchar(40) DEFAULT NULL, "+
+				  "`type` varchar(40) DEFAULT NULL COMMENT 'cpu,mem,thread,networkconn', "+
+				  "`status` varchar(40) DEFAULT NULL COMMENT 'RUNNABLE,WAIT', "+
+				  "`val` float DEFAULT 0, "+
+				  "`add_time` datetime DEFAULT NULL, "+
+				  "`mark` varchar(40) DEFAULT NULL "+
+				") ",
+				"CREATE INDEX IF NOT EXISTS IDX_T_API_MONITOR_ADD_TIME ON `"+table_name+"`(`add_time`)",
+				"CREATE INDEX IF NOT EXISTS IDX_T_API_MONITOR_SERVER_IP ON `"+table_name+"`(`server_ip`)",
+				"CREATE INDEX IF NOT EXISTS IDX_T_API_MONITOR_STATUS ON `"+table_name+"`(`status`)"
+				};
+		return batchSQL;
 	}
 	
 	public void drop(){
@@ -49,28 +78,11 @@ public class AppMonitorDao extends JdbcDaoSupport implements IAppMonitorDao{
 			this.getJdbcTemplate().update("DROP TABLE IF EXISTS `"+map.get("TABLE_NAME")+"`");
 		}
 	}
-
-	private String[] generateCreateTableSql(String table_name){
-		String batchSQL[] = { "CREATE TABLE IF NOT EXISTS `"+table_name+"` ( "+
-				  "`group_name` varchar(40) DEFAULT NULL, "+
-				  "`server_ip` varchar(40) DEFAULT NULL, "+
-				  "`app_name` varchar(40) DEFAULT NULL, "+
-				  "`type` varchar(40) DEFAULT NULL COMMENT 'cpu,mem,thread,networkconn', "+
-				  "`status` varchar(40) DEFAULT NULL COMMENT 'RUNNABLE,WAIT', "+
-				  "`val` int(12) DEFAULT NULL, "+
-				  "`add_time` datetime DEFAULT NULL, "+
-				  "`mark` varchar(40) DEFAULT NULL "+
-				") ",
-				"CREATE INDEX IF NOT EXISTS IDX_T_API_MONITOR_ADD_TIME ON `"+table_name+"`(`add_time`)",
-				"CREATE INDEX IF NOT EXISTS IDX_T_API_MONITOR_STATUS ON `"+table_name+"`(`status`)"
-				};
-		return batchSQL;
-	}
 	
 	public Object insert(JSONArray jsoarr){
 	    JSONObject jso = null;
 	    Object result;
-		String sql = "insert into "+TableUtil.table_name+"(group_name,server_ip,app_name,type,status,val,add_time,mark) " +
+		String sql = "insert into "+TableUtil.getT_API_MONITOR_YYYYMMDD()+"(group_name,server_ip,app_name,type,status,val,add_time,mark) " +
 		    		"values(?,?,?,?,?,?,?,?)";
 	    //log.debug("sql:{} columnNames:{}", sql,jsoarr); 
 		try {
@@ -85,7 +97,7 @@ public class AppMonitorDao extends JdbcDaoSupport implements IAppMonitorDao{
 			    String type = jso.getString("type");
 			    String status = jso.getString("status");
 			    String add_time = DateUtil.getCurrentDateStr();
-			    String val = jso.getInteger("val").toString();
+			    String val = jso.getString("val");
 			    String mark = jso.getString("mark");
 				String columnNames[] = {group_name,server_ip,app_name,type,status,val,add_time,mark};
 				batchArgs.add(columnNames);

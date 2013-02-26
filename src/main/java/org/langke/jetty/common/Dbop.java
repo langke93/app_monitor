@@ -11,10 +11,9 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.langke.jetty.server.SpringApplicationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
  
  /***
   * 数据源用于报表
@@ -26,23 +25,20 @@ public class Dbop {
     Object obj ;
     public int ErrorCode=0;
     public String ErrorMsg;
-    private static DataSource ds;
-
+    private static DataSource dataSource;
 	private static final Logger log = LoggerFactory.getLogger(Dbop.class);
 	private DataSource createDataSource(){
 		return createDataSource("dataSource");
 	}
     private DataSource createDataSource(String dsname){
     	//获取连接池对象
-		String[] locations = {"classpath:spring-context.xml"};
-		ApplicationContext ctx = new ClassPathXmlApplicationContext(locations);
-        return (DataSource) ctx.getBean(dsname);
+        return (DataSource) SpringApplicationContext.getInstance().getService(dsname);
     }
     
     public Dbop() {
       try{
-    	if(ds == null)
-    		ds = createDataSource();
+    	if(dataSource == null)
+    		dataSource = createDataSource();
         }catch(Exception ex){
          ErrorCode=-1;
          ErrorMsg=ex.getMessage();
@@ -52,8 +48,8 @@ public class Dbop {
     
     public Dbop(String dsname) {
         try{
-        	if(ds == null)
-        		ds = createDataSource(dsname);
+        	if(dataSource == null)
+        		dataSource = createDataSource(dsname);
             }catch(Exception ex){
              ErrorCode=-1;
              ErrorMsg=ex.getMessage();
@@ -64,13 +60,13 @@ public class Dbop {
     public  Connection  GetConnection(){
       Connection conn;
       try{
-		conn=ds.getConnection();
+		conn=dataSource.getConnection();
 		conn.setAutoCommit(false);
 		return conn;
       }catch (SQLException ex){
     	  log.error("",ex);
         try{
-          conn=ds.getConnection();
+          conn=dataSource.getConnection();
           conn.setAutoCommit(false);
         }catch(SQLException ex2){   
           ex2.printStackTrace();

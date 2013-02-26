@@ -19,7 +19,7 @@ public class SpringApplicationContext {
 	
 	private void initCtx(){
 		if(ctx == null) {
-			String[] locations = {"classpath:spring-context.xml"};
+			String[] locations = {"classpath:applicationContext.xml"};
 			ctx = new ClassPathXmlApplicationContext(locations);
 	     }  
 	}
@@ -27,6 +27,7 @@ public class SpringApplicationContext {
 	public Object  getService(String serviceName){
 		return ctx.getBean(serviceName);
 	}
+	
 	public ApplicationContext getApplicationContext(){
 		return ctx;
 	}

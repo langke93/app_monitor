@@ -3,9 +3,9 @@ package org.langke.jetty.server;
 import org.langke.jetty.service.AppMonitorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
-@Component
+@Controller 
 public class Job {
 
 	@Autowired

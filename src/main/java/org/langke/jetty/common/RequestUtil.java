@@ -21,7 +21,7 @@ public class RequestUtil {
 					str+=new String(read);
 				}
 			}finally{
-				bis.close();
+				//bis.close();
 			}
 		}
 		return str.trim();

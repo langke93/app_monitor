@@ -19,10 +19,9 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
+import org.langke.jetty.common.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
 
 /**
  * 内 嵌 jetty http 服务
@@ -32,7 +31,6 @@ public class AppMonitorJettyServer {
 
 	private static final Logger logger = LoggerFactory.getLogger(AppMonitorJettyServer.class);
 
-	//===========set
 	private int port = 9009;
 	private String contextPath = "/";
 	private String webPath;
@@ -43,11 +41,19 @@ public class AppMonitorJettyServer {
 	private Map<String, Servlet> servlets;
 	
 	private List<EventListener> listeners;
-
-	//===========
+	
 	private Server server;
 
-
+	public AppMonitorJettyServer() {
+		Integer port = Config.get().getInt("port", 9009);
+		Integer threadNum = Config.get().getInt("threadNum", 50);
+		String contextPath = Config.get().get("contextPath","/");
+		String webPath = Config.get().get("webPath","./src/main/webapp");
+		this.setPort(port);
+		this.setThreadNum(threadNum);
+		this.setContextPath(contextPath);
+		this.setWebPath(webPath);
+	}
 	private void init() throws Exception {
 		server = new Server();
 
@@ -59,7 +65,6 @@ public class AppMonitorJettyServer {
         QueuedThreadPool threadPool =  new QueuedThreadPool(threadNum);
         threadPool.setName("embed-jetty-http");
         connector.setThreadPool(threadPool);
-
 
 		server.setConnectors(new Connector[] { connector });
 		//Context context = null;
@@ -74,7 +79,7 @@ public class AppMonitorJettyServer {
 		} else {
 			context = new ServletContextHandler(server, contextPath);
 		}
-
+		
 		//add filter
 		if(filters != null) {
 			for(Map.Entry<String, Filter> eFilter : filters.entrySet()) {
@@ -98,12 +103,11 @@ public class AppMonitorJettyServer {
 				context.addEventListener(listener);
 			}
 		}
-		
+
 		if(webPath == null) {
 			context.addServlet(DefaultServlet.class, "/*");
 		}
 	}
-
 
 	public void start() throws Exception {
 		init();
@@ -117,26 +121,8 @@ public class AppMonitorJettyServer {
 	}
 
 	public static void main(String[] args) {
-		String contextFile = "classpath:spring-context.xml";
-		if (args.length > 0) {
-			contextFile = args[0];
-		}
-		ApplicationContext context = null;
-		try {
-			context = new FileSystemXmlApplicationContext(contextFile);
-		} catch (Exception e) {
-			System.out.println("RunMain [spring-conf-file]");
-			logger.warn("", e);
-		}
-
-		String jettyEmbedServerBeanName = "jettyEmbedServer";
-		if (args.length > 1) {
-			jettyEmbedServerBeanName = args[1];
-		}
-
-		final AppMonitorJettyServer jettyEmbedServer = (AppMonitorJettyServer) context.getBean(jettyEmbedServerBeanName);
+		final AppMonitorJettyServer jettyEmbedServer = new AppMonitorJettyServer();
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-
 			@Override
 			public void run() {
 				try {
@@ -180,7 +166,6 @@ public class AppMonitorJettyServer {
 	public void setServlets(Map<String, Servlet> servlets) {
 		this.servlets = servlets;
 	}
-
 
 	public void setListeners(List<EventListener> listeners) {
 		this.listeners = listeners;

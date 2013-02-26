@@ -31,10 +31,10 @@ public class LogFilter implements Filter {
 			FilterChain chain) throws IOException, ServletException {
 
 		HttpServletRequest req = (HttpServletRequest) request;
-		if(req.getPathInfo() != null){
+		if(req.getPathInfo() != null || (req.getRequestURI() != null && !req.getRequestURI().startsWith("/js/") && !req.getRequestURI().startsWith("/favicon.ico") && !req.getRequestURI().startsWith("/css/") && !req.getRequestURI().startsWith("/img/"))){
 			logger.info("ip={}, prot={}, contextPath={}, servletPath={}, pathInfo={}, params={}", new Object[] {
-					req.getLocalAddr(), req.getLocalPort(), req.getContextPath(),
-					req.getServletPath(), req.getPathInfo(), req.getParameterMap()
+					req.getRemoteAddr(), req.getRemotePort(), req.getContextPath(),
+					req.getServletPath(), req.getPathInfo(), req.getParameterMap() 
 			});
 		}
 
