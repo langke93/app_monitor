@@ -1,0 +1,74 @@
+@charset "gb2312";
+/*--树形选择模块start--*/
+.mod_selecter_tree { width:250px; }
+.mod_selecter_tree .box_content { padding:0; }
+.mod_selecter_tree .com_tree { padding:5px 10px; overflow:auto; height:auto!important; height:180px; max-height:240px; }
+.mod_selecter_tree .btn_area { clear:both; padding:8px 0 10px 0; border-top:1px solid #B5D6E4; margin-bottom:0; }
+/*--树形选择模块end--*/
+
+
+
+/*--树形选择模块start--*/
+.mod_selecter_list { width:520px; }
+.mod_selecter_list .box_content { padding:0; }
+.mod_selecter_list .com_search { float:right; width:520px; height:21px; padding:6px; color:#000; line-height:21px; overflow:hidden; }
+.mod_selecter_list .com_tblist { float:right; width:520px; }
+.mod_selecter_list .pager { float:right; width:341px; height:16px; line-height:16px; padding:5px 10px; }
+.mod_selecter_list .btn_area { clear:both; padding:8px 0 10px 0; border-top:1px solid #B5D6E4; margin-bottom:0; }
+/*--树形选择模块end--*/
+
+
+
+/*--分组选择模块start--*/
+.mod_selecter_combo { width:520px; }
+.mod_selecter_combo .box_content { padding:0; }
+.mod_selecter_combo .com_tree { padding:5px 10px; overflow:auto; height:250px; width:138px; float:left; border-right:1px solid #B5D6E4; }
+.mod_selecter_combo .com_search { float:right; width:349px; height:21px; padding:6px; color:#000; line-height:21px; overflow:hidden; }
+.mod_selecter_combo .com_search .ipt_tx { width:195px; }
+.mod_selecter_combo .com_tblist { float:right; width:361px; }
+.mod_selecter_combo .pager { float:right; width:341px; height:16px; line-height:16px; padding:5px 10px; }
+.mod_selecter_combo .btn_area { clear:both; padding:8px 0 10px 0; border-top:1px solid #B5D6E4; margin-bottom:0; }
+/*--分组选择模块end--*/
+
+
+
+
+/*--分组选择结果列表模块start--*/
+.mod_selectlist { width:300px; }
+.mod_selectlist .box_content { padding:0; }
+.mod_selectlist .com_listex { padding:5px 10px; overflow:auto; height:auto!important; height:180px; max-height:180px; }
+/*--分组选择结果列表模块end--*/
+
+
+
+/*--树形组件start--*/
+.com_tree { text-align:left; white-space:nowrap; overflow:hidden; }
+.com_tree ul { margin:3px 0 -3px 0; }
+.com_tree li { padding:3px 0; line-height:14px; }
+.com_tree li li { padding-left:16px; }
+.com_tree li .icon { margin:-2px 2px 2px 0; }
+/*只显示一行*/
+.com_tree_single { white-space:normal; }
+.com_tree_single li{ padding-left:20px; text-indent:-20px; }
+/*--树形组件end--*/
+
+
+
+/*--表格列表组件start--*/
+.com_tblist { border-bottom:1px solid #B5D6E4; }
+.com_tblist th, .com_tblist td { line-height:16px; text-align:center; }
+.com_tblist th { border:1px solid #B5D6E4; border-style:solid none; background:#EEF7FB; font-weight:normal; padding:4px 3px 3px 3px; color:#000; }
+.com_tblist td { padding:5px 3px 4px 3px; }
+.com_tblist .op { padding:3px 0 0 10px; text-align:right; width:16px; vertical-align:top; }
+.com_tblist .op input { width:16px; height:16px; }
+.com_tblist .num { width:40px; }
+/*--表格列表组件end--*/
+
+
+
+/*--可删除列表start--*/
+.com_listex { text-align:left; overflow:hidden; position:relative; }
+.com_listex li { padding-right:20px; line-height:20px; position:relative; height:20px; overflow:hidden; }
+.com_listex li em { font-style:normal; margin-right:8px; }
+.com_listex li .icon { position:absolute; top:3px; right:0; }
+/*--可删除列表end--*/

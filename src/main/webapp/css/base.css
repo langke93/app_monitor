@@ -1,0 +1,218 @@
+@charset "gb2312";
+/*----*/
+/*----*/
+
+/*----*/
+* { margin:0; padding:0; }
+body { font:12px/20px simsun; padding:10px; text-align:left; color:#4C4C4C; }
+ul, ol { list-style:none; }
+table { border-collapse:collapse; empty-cells:show; font-size:12px; }
+h1, h2, h3, h4, h5, h6 { font-size:100%; }
+input, select, textarea, button { font:12px/20px simsun; vertical-align:middle; }
+table { empty-cells:show; border-collapse:collapse; }
+select { height:22px; }
+.v_m{vertical-align:middle;}
+.input_checkbox{*margin:0 -3px 0 -4px;}
+.mr20{ margin-right:20px;}
+.mr10{ margin-right:10px;}
+.mt20{ margin-top:20px;}
+.fl{ float:left;}
+/*----*/
+
+
+
+/*--文档格式start--*/
+/*代码片段*/
+.tl { text-align:left; }
+.tc { text-align:center; }
+.tr { text-align:right; }
+.c_default { color:#4C4C4C; }
+.c_red { color:#FF2400; }
+.c_gray { color:#BBBBBB; }
+/*标题*/
+h2 { font-size:14px; line-height:24px; zoom:1; overflow:visible; position:relative; margin-bottom:5px; }
+h2 em { font-weight:normal; font-size:12px; margin-left:5px; }
+h2 .func { position:absolute; top:3px; right:0; text-align:right; white-space:nowrap; overflow:visible; line-height:18px; height:18px; font-size:12px; font-weight:normal; color:#666; }
+h2 .func select { margin-top:-2px; position:relative; }
+/**/
+em { font-style:normal; color:#BBBBBB; }
+/*链接*/
+a { color:#1C8DBE; text-decoration:none; }
+a:hover { text-decoration:underline; }
+/*列表*/
+.list_ul { padding:2px 8px; line-height:18px; }
+/*--文档格式end--*/
+
+
+
+/*--图标start--*/
+.icon { background:url(../img/icon.gif) no-repeat; display:-moz-inline-box; display:inline-block; overflow:hidden; vertical-align:middle; font-size:0; line-height:0; }
+.icon_close { width:13px; height:13px; background-position:0 0; }
+.icon_delete { width:11px; height:11px; background-position:0 -72px; }
+.icon_topen, .icon_tclose { width:14px; height:14px; background-position:2px -22px; }
+.icon_tclose { background-position:2px -46px; }
+/*--图标start--*/
+
+
+
+/*----*/
+.tab { border-bottom:1px solid #B5D6E4; height:23px; position:relative; margin-bottom:15px; padding:0 3px; }
+.tab ul { position:absolute; top:0; left:3px; height:24px; white-space:nowrap; cursor:default; overflow:hidden; }
+.tab ul li { float:left; border:1px solid #B5D6E4; border-style:none solid; height:22px; margin:1px 3px 0 0; }
+.tab ul li a, .tab ul li span { float:left; padding:0 10px; text-decoration:none; color:#4C4C4C; border-top:1px solid #B5D6E4; height:22px; line-height:24px; overflow:hidden; margin-top:-1px; position:relative; }
+.tab ul li a { text-decoration:none; background:#EEF7FB; }
+.tab ul li a:hover { text-decoration:none; background:#fff; }
+.tab ul li span { background:#fff; }
+.tab ul li.selected { height:23px; background:#fff; }
+.tab ul li.selected a { background:#fff; }
+.tab .func { position:absolute; top:5px; right:3px; line-height:18px; height:18px; }
+/*----*/
+
+
+
+/*--容器start--*/
+/*标准容器*/
+.box_stand { margin-bottom:15px; border:1px solid #B5D6E4; }
+.box_stand .box_stand { margin-bottom:5px; }
+.box_stand h2 { font-size:12px; padding:3px 8px; border-bottom:1px solid #B5D6E4; background:#EEF7FB; line-height:15px; height:15px; color:#1C8DBE; margin-bottom:0; }
+.box_stand h2 .func { top:3px; right:8px; line-height:15px; height:15px; }
+.box_stand .box_h2tab { font-weight:normal; color:#BBBBBB; }
+.box_stand .box_h2tab strong { color:#4C4C4C; }
+.box_stand .box_content,.basic_data { padding:10px; zoom:1; overflow:hidden; background:#fff; position:relative; }
+/*标准容器*/
+.box_layer { position:absolute; width:300px; }
+/*文本框容器*/
+.box_alert { border:1px solid #f93; background:#ffd; color:#f00; padding:5px 15px; margin-bottom:15px; }
+.box_bar { border:1px solid #B3D5E4; background:#EEF7FB; padding:5px 15px; margin-bottom:15px; }
+/*表格容器*/
+.box_tb { margin-bottom:15px; }
+.mb15{ margin-bottom:15px;}
+/*--容器end--*/
+
+
+
+/*--表格start--*/
+.tb_stand,.tb_limit{ text-align:left; line-height:20px; width:100%; }
+.tb_stand th, .tb_stand td,.tb_limit th,.tb_limit td { border:1px solid #B3D5E4; padding:2px 5px; vertical-align:middle; text-align:center; }
+.tb_stand th,.tb_limit th { background:#EEF7FB; font-weight:bold; color:#1C8DBE; }
+.tb_stand td.lth { background:#EEF7FB; color:#000; }
+.tb_limit td,.tb_limit th{ text-align:left;}
+.tb_limit td.t_c{ text-align:center;}
+.tb_limit td.t_r{ text-align:right;}
+.tb_limit td span{ margin:0 5px;}
+.tb_limit td em{ color:#000; margin-left:5px;}
+/*专用配色*/
+.tb_stand .even td { background:#E9E9FD; }
+.tb_stand .sum td { background:#F9EDD9; }
+.tb_stand .group td { background:#E9E9FD; font-weight:bold; text-align:left; }
+/*表格图示*/
+.tb_c0, .tb_c0 td { background:#fff; }
+.tb_c1, .tb_c1 td { background:#E9E9FD; }
+.tb_c2, .tb_c2 td { background:#EBEBE2; }
+.tb_c3, .tb_c3 td { background:#FDECE1; }
+.tb_c4, .tb_c4 td { background:#FFF3DB; }
+.tb_c5, .tb_c5 td { background:#EBF7DA; }
+.tb_c6, .tb_c6 td { background:#E1F9FD; }
+.tb_c7, .tb_c7 td { background:#F8DEFC; }
+.tb_c8, .tb_c8 td { background:#F9EDD9; }
+span.tb_c0, span.tb_c1, span.tb_c2, span.tb_c3, span.tb_c4, span.tb_c5, span.tb_c6, span.tb_c7, span.tb_c8 { display:-moz-inline-box; display:inline-block; vertical-align:middle; padding:0 3px; line-height:18px; height:18px; white-space:nowrap; color:#4C4C4C; cursor:default; }
+span.tb_c0 { border:1px solid #B3D5E4; height:16px; line-height:16px; }
+/*窄*/
+.tb_stand .nrw { padding:0; text-align:center; }
+/*自动适应宽度表格*/
+.tb_autosize { width:auto; }
+/*分页*/
+.pager { padding:5px; height:22px; overflow:hidden; position:relative; line-height:17px; text-align:right; }
+.pager .ipt_tx { width:2em; padding:0; line-height:15px; height:15px; }
+.pager .pager_info {
+	position:absolute;
+	top:4px;
+	left:8px;
+	background:#fff;
+	padding-right:5px;
+}
+.pager .pager_list { display:inline; }
+.pager .pager_list a { margin:0 3px; }
+.pager .pager_list strong { margin:0 3px; color:#FF2400; }
+.pager .pager_go { display:inline; margin-left:10px; }
+.pager .pager_go .btn { height:19px; padding:0 8px; width:auto; overflow:visible; line-height:14px; margin:-1px auto; }
+/*--表格end--*/
+
+
+
+/*--表单start--*/
+/*简单表单，单行折行*/
+.form_simple { zoom:1; overflow:hidden; }
+.form_simple .item { float:left; white-space:nowrap; display:inline; height:22px; padding:5px 0; margin-right:20px; }
+.form_simple .ipt_tx { width:80px; }
+.box_tb .ipt_tx{ width:50px; text-align:center;}
+
+
+
+
+/*控件样式*/
+.ipt_tx,.ipt_tc { border:1px solid #B5D6E4; line-height:16px; height:16px; padding:2px 2px 1px 2px; }
+textarea.ipt_tx { display:block; width:400px; height:64px; }
+.box_layer textarea.ipt_tx { width:300px; }
+.ipt_file { height:21px; width:200px; }
+.ipt_fixed { width:13px; height:13px; }
+/*常用控件宽度*/
+.ipt_ws { width:50px;}
+.ipt_wm { width:180px;}
+.ipt_wl { width:300px; }
+/*按钮*/
+.btn { font-size:12px; cursor:pointer; overflow:visible; white-space:nowrap; width:auto; padding:0 5px; height:24px; line-height:18px; margin:5px 0; }
+.btn_blue, .btn_orange { height:21px; vertical-align:middle; padding:0 10px; line-height:17px; border:1px solid #A8CFEA; background:#E0F5FA url(../img/btn.gif) repeat-x 0 0; margin:0; }
+.btn_orange { background-color:#FBF4DF; border-color:#EAB56E; background-position:0 -40px; }
+.btn_s { border:none; background:none; line-height:18px; height:18px; vertical-align:middle; padding:0 3px; margin:0; }
+.btn_n { height:21px; padding:0 5px; line-height:16px; margin:0; }
+.btn_area { padding-bottom:25px; text-align:center; }
+.box_stand .btn_area { padding:10px 0; }
+/*--表单start--*/
+
+
+
+/*--图形图表start--*/
+/*流程图*/
+.graphic .graphic_group { display:inline; white-space:nowrap; overflow:hidden; margin-right:30px; }
+.graphic label { display:-moz-inline-box; display:inline-block; vertical-align:middle; line-height:20px; height:20px; margin:7px 0; white-space:nowrap; overflow:hidden; }
+.graphic label img { vertical-align:text-bottom; }
+.graphic label.arrow { background:url(../img/icon.gif) no-repeat 50% -107px; line-height:14px; height:14px; padding-bottom:20px; overflow:visible; width:auto!important; width:20px; min-width:20px; margin:0; }
+.graphic label.s1, .graphic label.s2, .graphic label.s3, .graphic label.s4 { padding:0 8px; margin:7px 5px; color:#000; border:1px solid #B5D6E4; line-height:18px; height:18px; }
+.graphic label.s1 { background:#fff; }
+.graphic label.s2 { background:#fff; border:1px dashed #FF2400; }
+.graphic label.s3 { background:#EBEBE2; }
+.graphic label.s4 { background:#EBF7DA; }
+/*统计图*/
+.graphic_box { zoom:1; overflow:hidden; clear:both; margin-bottom:20px; }
+.graphic_box h4 { font-size:12px; line-height:20px; }
+.graphic_box .graphic_obj { float:left; margin-bottom:10px; }
+.graphic_box p { clear:both; }
+
+/*--图形图表end--*/
+
+/* 流量图 */
+.box_chart{ margin-bottom:15px; overflow:hidden; zoom:1;}
+
+/* 过滤词 */
+.filter_box h2{ margin-bottom:10px; }
+.filter_box textarea{ width:70%; height:115px; margin-bottom:10px;}
+.filter_list,.filter_list ul{ padding-top:10px;}
+.filter_list ul{  overflow:hidden; zoom:1;}
+.filter_list li{ float:left;  padding:0 35px 7px 0; width:10%; overflow:hidden; zoom:1; height:15px;}
+.filter_list li em,.filter_more em{ margin-left:5px; color:#000;}
+.filter_list li label,.filter_more label{ cursor:pointer;}
+.filter_more{ overflow:hidden; zoom:1; text-align:right; padding:10px 150px 0 0 ;}
+.filter_more span{ padding-left:20px;}
+/* 过滤词 */
+
+.basic_data li{padding:3px 3px 3px 110px; position:relative; zoom:1; line-height:22px; min-height:22px; _height:22px;}
+.basic_data li label{ position:absolute; top:3px; left:3px; width:100px; text-align:right;}
+.basic_data li .info, .basic_data li .error { white-space:nowrap; color:#bbb; display:-moz-inline-box; display:inline-block; _display:inline; zoom:1; line-height:15px; height:15px; margin:3px auto 3px 5px; vertical-align:middle; }
+.basic_data li strong { position:absolute; top:3px; left:422px; width:8px; text-align:left; color:#f00; overflow:hidden; }
+.basic_data li .ipt_tx{ width:300px;}
+.basic_data li textarea.ipt_tx{ height:100px;}
+.basic_data li .ipt_tc{ width:80px;}
+.basic_data li img{ vertical-align:middle; margin:-2px 0 0;} 
+.basic_data li a{ text-decoration:underline;}
+.basic_data li em{position:absolute; top:8px;_top:6px; left:0px; width:100px; text-align:right;}
