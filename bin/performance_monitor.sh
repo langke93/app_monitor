@@ -3,7 +3,7 @@ BASE_PATH=`$DIRNAME $0`
 cd $BASE_PATH
 #export PATH=/usr/local/jdk1.6.0_26/bin:$PATH
 TMPFILE=/tmp/per_mointor.tmp
-IP=`/sbin/ip a |grep 'inet '|awk -F'/' '{print $1}'|awk '{print $2}'|grep -v 127.0.0.1|head -1`
+IP=`/sbin/ip a |grep 'inet '|awk -F'/' '{print $1}'|awk '{print $2}'|grep -v 127.0.0.1|grep -v lo:*|head -1`
 JPS_FILE=/tmp/jps_file.tmp
 function_send_data(){
   url="http://app.monitor.server:9009/monitor/_add"
