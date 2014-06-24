@@ -27,6 +27,7 @@ SEARCH_VER=9
 DEFAULT_OPTS="$DEFAULT_OPTS -Dcom.sun.management.jmxremote.port=89${SEARCH_VER}6" 
 DEFAULT_OPTS="$DEFAULT_OPTS -Dcom.sun.management.jmxremote.authenticate=false"
 DEFAULT_OPTS="$DEFAULT_OPTS -Dcom.sun.management.jmxremote.ssl=false"
+DEFAULT_OPTS="$DEFAULT_OPTS -Djava.awt.headless=true"
 DEBUG_INFO=" -Xdebug -Xrunjdwp:transport=dt_socket,address=1527${SEARCH_VER},server=y,suspend=n "
 DEBUG=""
 case $1 in
