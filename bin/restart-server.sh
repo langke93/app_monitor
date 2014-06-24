@@ -14,12 +14,12 @@ echo `/bin/pwd`
 #export JAVA_HOME=/usr/local/jdk1.6.0_26
 #export PATH=/usr/local/jdk1.6.0_26/bin:$PATH
 
-CLASSPATH=conf/*:$JAVA_HOME/lib/dt.jar:/$JAVA_HOME/lib/tools.jar:$CLASSPATH
+CLASSPATH=$BASE_PATH/conf/:$JAVA_HOME/lib/dt.jar:/$JAVA_HOME/lib/tools.jar:$CLASSPATH
 for i in bin/*.jar ;do
- CLASSPATH=$i:$CLASSPATH;
+ CLASSPATH=$CLASSPATH:$i;
 done
 for i in lib/*.jar ;do
- CLASSPATH=$i:$CLASSPATH;
+ CLASSPATH=$CLASSPATH:$i;
 done
 
 SEARCH_VER=9
