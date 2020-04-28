@@ -2,3 +2,7 @@
 /logs
 /h2
 /.settings
+.idea/*
+.project
+.classpath
+/*.iml
